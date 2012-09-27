@@ -1127,11 +1127,13 @@ class Interface (gobject.GObject):
 		if not text_mode and use_command_keys:
 			# translate extra commands to normal commands here
 			# and remember skipped chars
-			if keyv == key_book["space"]:
-				if shift_mask:
-					keyv = key_book["Up"]
-				else:
-					keyv = key_book["Down"]
+			if keyv == key_book["space"] and self.third.get_property("visible"):
+				self.current.hide_table()
+				self.current = self.third
+				self._update_active()
+				self.toggle_text_mode(False)
+				self.toggle_text_mode_quick()
+				return True
 			elif keyv == ord("/") and has_selection:
 				keyv = key_book["Right"]
 			elif keyv == ord(",") and has_selection:
