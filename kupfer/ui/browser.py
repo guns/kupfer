@@ -1155,6 +1155,9 @@ class Interface (gobject.GObject):
 				keyv = key_book["Down"]
 			elif keyv == ord("k") or keyv == ord("p"):
 				keyv = key_book["Up"]
+			elif keyv == ord("u") or keyv == ord("]"):
+				self.reset_text()
+				return True
 
 		# disabled  repeat-key activation and shift-to-action selection
 		# check for repeated key activation
