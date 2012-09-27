@@ -1100,6 +1100,7 @@ class Interface (gobject.GObject):
 		# MOD1_MASK is alt/option
 		mod1_mask = ((event.state & modifiers) == gtk.gdk.MOD1_MASK)
 		shift_mask = ((event.state & all_modifiers) == gtk.gdk.SHIFT_MASK)
+		control_mask = ((event.state & all_modifiers) == gtk.gdk.CONTROL_MASK)
 
 		text_mode = self.get_in_text_mode()
 		has_input = bool(self.entry.get_text())
@@ -1148,6 +1149,12 @@ class Interface (gobject.GObject):
 		                          key_book["Home"], key_book["End"]):
 			# pass these through in text mode
 			return False
+
+		if control_mask:
+			if keyv == ord("j") or keyv == ord("n"):
+				keyv = key_book["Down"]
+			elif keyv == ord("k") or keyv == ord("p"):
+				keyv = key_book["Up"]
 
 		# disabled  repeat-key activation and shift-to-action selection
 		# check for repeated key activation
