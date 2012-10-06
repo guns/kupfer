@@ -1155,6 +1155,10 @@ class Interface (gobject.GObject):
 				keyv = key_book["Down"]
 			elif keyv == ord("k") or keyv == ord("p"):
 				keyv = key_book["Up"]
+			elif keyv == ord("h"):
+				keyv = key_book["Left"]
+			elif keyv == ord("l"):
+				keyv = key_book["Right"]
 			elif keyv == ord("u") or keyv == ord("]"):
 				self.reset_text()
 				return True
