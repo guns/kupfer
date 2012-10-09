@@ -4,6 +4,8 @@ from os import path as os_path
 import locale
 import signal
 import sys
+import re
+import subprocess
 
 import gobject
 import glib
@@ -272,6 +274,12 @@ def show_url(url):
 	from gtk import show_uri, get_current_event_time
 	from gtk.gdk import screen_get_default
 	from glib import GError
+
+	# xdg-open does a better job than gtk.show_uri at choosing my default
+	# web browser, and returns faster than webbrowser.open
+	if re.match(r"\Ahttps?", url):
+		return subprocess.call(['xdg-open', url])
+
 	try:
 		pretty.print_debug(__name__, "show_url", url)
 		return show_uri(screen_get_default(), url, get_current_event_time())
