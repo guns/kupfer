@@ -1128,12 +1128,14 @@ class Interface (gobject.GObject):
 		if not text_mode and use_command_keys:
 			# translate extra commands to normal commands here
 			# and remember skipped chars
-			if keyv == key_book["space"] and self.third.get_property("visible"):
+			if keyv == key_book["space"]:
+				third_is_visible = self.third.get_property("visible")
 				self.current.hide_table()
-				self.current = self.third
+				self.current = self.third if third_is_visible else self.action
 				self._update_active()
-				self.toggle_text_mode(False)
-				self.toggle_text_mode_quick()
+				if third_is_visible:
+					self.toggle_text_mode(False)
+					self.toggle_text_mode_quick()
 				return True
 			elif keyv == ord("/") and has_selection:
 				keyv = key_book["Right"]
