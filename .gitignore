@@ -7,3 +7,6 @@
 /po/untitled.pot
 
 *.pyc
+
+/pkg
+/*.tar.xz*
