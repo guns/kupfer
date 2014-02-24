@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+#! /usr/bin/env python2
 # per rosengren 2011
 
 from os import environ, path

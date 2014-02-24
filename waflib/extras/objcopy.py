@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python2
 # Grygoriy Fuchedzhy 2010
 
 """

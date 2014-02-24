@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+#! /usr/bin/env python2
 # encoding: utf-8
 
 # Kupfer's main wscript description file for Waf, written by Ulrik Sverdrup
@@ -139,7 +139,7 @@ def configure(conf):
 			"Installing python modules into: %(PYTHONDIR)s" % conf.env)
 
 	opt_build_programs = {
-			"rst2man": "Generate and install man page",
+			"rst2man2": "Generate and install man page",
 		}
 	for prog in opt_build_programs:
 		try:
@@ -256,12 +256,12 @@ def build(bld):
 	bld.install_files("${BINDIR}", "bin/kupfer-exec", chmod=0o755)
 
 	# Documentation/
-	if bld.env["RST2MAN"]:
+	if bld.env["RST2MAN2"]:
 		# generate man page from Manpage.rst
 		bld.new_task_gen(
 			source = "Documentation/Manpage.rst",
 			target = "kupfer.1",
-			rule = '%s ${SRC} > ${TGT}' % bld.env["RST2MAN"],
+			rule = '%s ${SRC} > ${TGT}' % bld.env["RST2MAN2"],
 		)
 		bld.add_group()
 		# compress and install man page
