@@ -3,7 +3,7 @@
 # Contributor: Alessio Sergi <asergi at archlinux dot us>
 # Contributor: Asa Marco <marcoasa90[at]gmail[.]com>
 pkgname=kupfer-guns
-pkgver=v208.71.gc83ed1b
+pkgver=v208.78.g1625641
 pkgrel=1
 pkgdesc="Sung Pae's kupfer build"
 arch=('x86_64')
@@ -11,7 +11,7 @@ url="https://github.com/guns/kupfer"
 license=('GPL3')
 groups=('guns')
 depends=('desktop-file-utils' 'hicolor-icon-theme' 'pygtk'
-         'python2-dbus' 'python2-gobject2' 'python2-keybinder2' 'python2-xdg')
+         'python2-dbus' 'python2-gobject2' 'python2-keybinder2' 'python2-wnck' 'python2-xdg')
 makedepends=('intltool' 'python2-docutils')
 optdepends=('gnome-python-desktop: full GNOME integration'
             'python2-gdata: Google services support'
