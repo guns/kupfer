@@ -10,7 +10,7 @@ arch=('x86_64')
 url="https://github.com/guns/kupfer"
 license=('GPL3')
 groups=('guns')
-depends=('desktop-file-utils' 'hicolor-icon-theme' 'pygtk'
+depends=('desktop-file-utils' 'gnome-doc-utils' 'hicolor-icon-theme' 'pygtk'
          'python2-dbus' 'python2-gobject2' 'python2-keybinder2' 'python2-wnck' 'python2-xdg')
 makedepends=('intltool' 'python2-docutils')
 optdepends=('gnome-python-desktop: full GNOME integration'
