@@ -1,4 +1,4 @@
-#! /usr/bin/env python2
+#! /usr/bin/env python
 # encoding: utf-8
 #
 # written by Sylvain Rouquette, 2011

@@ -1,4 +1,4 @@
-#! /usr/bin/env python2
+#! /usr/bin/env python
 
 """
 Illustrate how to override a class method to do something

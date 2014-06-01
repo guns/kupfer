@@ -1,4 +1,4 @@
-#! /usr/bin/env python2
+#! /usr/bin/env python
 # Thomas Nagy, 2011
 
 # Try to cancel the tasks that cannot run with the option -k when an error occurs:

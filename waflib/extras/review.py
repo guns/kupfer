@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 # encoding: utf-8
 # Laurent Birtz, 2011
 # moved the code into a separate tool (ita)

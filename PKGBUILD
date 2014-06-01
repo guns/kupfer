@@ -3,7 +3,7 @@
 # Contributor: Alessio Sergi <asergi at archlinux dot us>
 # Contributor: Asa Marco <marcoasa90[at]gmail[.]com>
 pkgname=kupfer-guns
-pkgver=v208.78.g1625641
+pkgver=v208.70.gbb3be2c
 pkgrel=1
 pkgdesc="Sung Pae's kupfer build"
 arch=('x86_64')
@@ -45,3 +45,7 @@ package() {
 
  ./waf install -f --destdir="$pkgdir"
 }
+
+
+
+
