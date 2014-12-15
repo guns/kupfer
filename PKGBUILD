@@ -2,14 +2,14 @@
 # Contributor: D. Can Celasun <dcelasun[at]gmail[dot]com>
 # Contributor: Alessio Sergi <asergi at archlinux dot us>
 # Contributor: Asa Marco <marcoasa90[at]gmail[.]com>
-pkgname=kupfer-guns
-pkgver=v208.70.gbb3be2c
+pkgname=kupfer-nerv
+pkgver=
 pkgrel=1
-pkgdesc="Sung Pae's kupfer build"
+pkgdesc="Custom kupfer build"
 arch=('x86_64')
 url="https://github.com/guns/kupfer"
 license=('GPL3')
-groups=('guns')
+groups=('nerv')
 depends=('desktop-file-utils' 'gnome-doc-utils' 'hicolor-icon-theme' 'pygtk'
          'python2-dbus' 'python2-gobject2' 'python2-keybinder2' 'python2-wnck' 'python2-xdg')
 makedepends=('intltool' 'python2-docutils')
@@ -18,6 +18,9 @@ optdepends=('gnome-python-desktop: full GNOME integration'
             'python2-gnomekeyring: GNOME keyring support'
             'python2-setproctitle: set process name'
             'python2-wnck: tracks running applications')
+provides=('kupfer')
+conflict=('kupfer')
+replaces=('kupfer-guns')
 install=kupfer.install
 
 pkgver() {
@@ -45,7 +48,3 @@ package() {
 
  ./waf install -f --destdir="$pkgdir"
 }
-
-
-
-
