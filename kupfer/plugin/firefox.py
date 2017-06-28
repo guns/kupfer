@@ -116,15 +116,16 @@ class BookmarksSource (AppLeafContentMixin, Source, FilesystemWatchMixin):
 			self._history = []
 
 		# now try reading JSON bookmark backups,
+		# with html bookmarks as backup
 		dirloc = firefox_support.get_firefox_home_file("bookmarkbackups")
 		fpath = None
 		if dirloc:
-			files = [f for f in os.listdir(dirloc) if os.path.splitext(f)[-1].lower() == ".json"]
+			files = os.listdir(dirloc)
 			if files:
-				files.sort()
-				fpath = os.path.join(dirloc, files[-1])
+				latest_file = (files.sort() or files)[-1]
+				fpath = os.path.join(dirloc, latest_file)
 
-		if fpath:
+		if fpath and os.path.splitext(fpath)[-1].lower() == ".json":
 			try:
 				json_bookmarks = list(self._get_ffx3_bookmarks(fpath))
 			except Exception:
@@ -133,6 +134,14 @@ class BookmarksSource (AppLeafContentMixin, Source, FilesystemWatchMixin):
 				self.output_exc()
 			else:
 				return itertools.chain(self._history, json_bookmarks)
+
+		fpath = firefox_support.get_firefox_home_file("bookmarks.html")
+		if fpath:
+			html_bookmarks = self._get_ffx2_bookmarks(fpath)
+		else:
+			self.output_error("No firefox bookmarks file found")
+			html_bookmarks = []
+		return itertools.chain(self._history, html_bookmarks)
 
 	def get_description(self):
 		return _("Index of Firefox bookmarks")
