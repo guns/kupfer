@@ -18,6 +18,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+from __future__ import division
 
 """
 This module provides relevance matching and formatting of related strings
@@ -31,7 +32,7 @@ based on the relevance.  It originates in Gnome-Do.
 Compatibility: Python 2.4 and later, including Python 3
 """
 
-from __future__ import division
+
 
 # This module is compatible with both Python 2 and Python 3;
 # we need the iterator form of range for either version, stored in range()
@@ -72,7 +73,7 @@ def formatCommonSubstrings(s, query, format_clean=None, format_match=None):
     for slc in range(len(query), 0, -1):
         if query[:slc] == ls[first:first+slc]:
             break
-    key, nextkey = query[:slc], query[slc:]
+    nextkey = query[slc:]
 
     head = s[:first]
     match = s[first: first+slc]
@@ -88,6 +89,36 @@ def formatCommonSubstrings(s, query, format_clean=None, format_match=None):
             format(tail),
             ))
 
+def score_single(s, query):
+    """
+    s: text body to score
+    query: A single character
+
+    This is a single character approximation to `score`.
+
+    >>> round(score_single('terminal', 't'), 6)
+    0.973125
+    >>> round(score_single('terminal', 'e'), 6)
+    0.903125
+    >>> round(score_single('terminal', 'a'), 6)
+    0.903125
+    >>> round(score_single('t', 't'), 6)
+    0.995
+    """
+
+    ls = s.lower()
+
+    # Find the shortest possible substring that matches the query
+    # and get the ration of their lengths for a base score
+    first = ls.find(query)
+    if first == -1:
+        return .0
+    score = 0.9 + .025 / len(s)
+
+    if first == 0:
+        score += 0.07
+    return score
+
 def score(s, query):
     """
     A relevancy score for the string ranging from 0 to 1
@@ -100,14 +131,18 @@ def score(s, query):
 
     Returns: a float between 0 and 1
 
-    >>> print(score('terminal', 'trml'))
-    0.735098684211
-    >>> print(score('terminal', 'term'))
-    0.992302631579
+    >>> round(score('terminal', 'trml'), 6)
+    0.735099
+    >>> round(score('terminal', 'term'), 6)
+    0.992303
     >>> print(score('terminal', 'try'))
     0.0
     >>> print(score('terminal', ''))
     1.0
+    >>> round(score('terminal', 't'), 6)
+    0.98949
+    >>> round(score('terminal', 'e'), 6)
+    0.918438
     """
     if not query:
         return 1.0
@@ -130,7 +165,7 @@ def score(s, query):
     bad = 1
     firstCount = 0
     for i in range(first, last-1):
-        if ls[i] in " -":
+        if ls[i] in " -.([_":
             if ls[i + 1] in query:
                 firstCount += 1
             else:

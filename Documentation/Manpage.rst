@@ -6,8 +6,8 @@ kupfer
 Convenient command and access tool for applications and documents
 -----------------------------------------------------------------
 
-:Author: Ulrik Sverdrup <ulrik.sverdrup@gmail.com>
-:Date: 2011
+:Author: Ulrik Sverdrup
+:Date: 2017
 :Manual section: 1
 
 SYNOPSIS
@@ -40,25 +40,24 @@ Kupfer can be invoked with a list of files
 
         ``kupfer`` *FILE* ...
 
-This can be used to select files given as command-line arguments in the
-program. Then you can invoke actions even on objects from a shell-based
-context.
+The file paths will be sent to and selected in an already running
+instance of the program.
 
 You may also pipe text to ``kupfer`` to pass it to a currently running
-instance of the program.
+instance.
 
 OPTIONS
 =======
 
 --no-splash     Launch without presenting main interface
 
---list-plugins  Display a list of all installed plugins
-
 --debug         Enable more verbose output that can help understanding
                 the program's operation.
 
---relay         Is deprecated and will be started by the Multihead
-                Support plugin when needed
+--list-plugins  List all installed plugins by their identifier, version
+                and description.
+
+The following are options for internal use
 
 --exec-helper=HELPER    Run plugin helper program, which should be the
                         name of a module inside kupfer.
@@ -84,6 +83,9 @@ plugins (installed in the program's python package).
 
 If *KUPFER_NO_CACHE* is set, do not load from or write to any source
 cache files.
+
+If *KUPFER_NO_KEYBINDER* is set do not use ``Keybinder`` even if it is
+installed.
 
 
 .. vim: ft=rst tw=72

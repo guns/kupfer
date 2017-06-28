@@ -1,8 +1,8 @@
-kupfer is a simple, flexible launcher for GNOME
-++++++++++++++++++++++++++++++++++++++++++++++++
+kupfer is a smart, quick launcher
++++++++++++++++++++++++++++++++++
 
-:Homepage:  https://wiki.gnome.org/Apps/Kupfer
-:Credits:   Copyright 2007–2011 Ulrik Sverdrup <ulrik.sverdrup@gmail.com>
+:Homepage:  https://kupferlauncher.github.io/
+:Credits:   Copyright 2007–2017 Ulrik Sverdrup and other Kupfer authors
 :Licence:   GNU General Public License v3 (or any later version)
 
 Kupfer is an interface for quick and convenient access to applications
@@ -16,11 +16,16 @@ applications.
 Installing
 ==========
 
-This project is configured for the Waf build system;
+This project is configured for the Waf build system, which is included.
+Run it using either ``./waf`` or ``python3 waf`` (using your python.)
+
 Installation follows the steps::
 
     ./waf configure
     ./waf
+
+If configure does not find the right Python 3 executable, set ``PYTHON``
+explicitly first.
 
 then::
 
@@ -32,9 +37,8 @@ or ::
 
 You can use ``--prefix=$PREFIX`` when configuring to assign an
 installation spot. By default, Kupfer is installed for all users.
-Installing only for your user, the prefix ``~/.local`` is often used;
-you just have to make sure that ``~/.local/bin`` is in your ``$PATH``.
-
+Installing only for your user is possible, but the binary directory must
+be in your ``$PATH``.
 
 About Waf
 ---------
@@ -53,12 +57,12 @@ on Saturday, 25 February 2012. The following files extracted::
     ./waflib/Tools/*  some files excluded
     ./waflib/extras/* some files excluded
 
-    No file contents touched.
+1 patch as been applied to waf.
 
 Build Requirements
 ------------------
 
-* Python 2.6 or Python 3
+* Python 3
 * intltool
 * optionally: rst2man (python-docutils)  to install the manpage
 * optionally: xml2po (gnome-doc-utils)  to install mallard help pages
@@ -66,32 +70,29 @@ Build Requirements
 Runtime Requirements
 --------------------
 
-Kupfer requires Python 2.6 or later, and the following important libraries:
+Kupfer requires Python 3 or later, and the following important libraries:
 
-* gtk python bindings, GTK+ version 2.20 [#]_
-* glib python bindings (pygobject) 2.18
+Because the port to Python 3 and Gtk 3 is new, I don't know what the lower
+boundaries of dependencies are. I've given the versions where it is
+known to work.
+
+* Gtk-3.0 version 3.22
+* libkeybinder-3.0 version 0.3.1
+* python gir1.2
 * dbus python bindings
 * python-xdg
 
-.. [#] GTK+ 2.20 required for using full support. Kupfer is known to run with
-       version 2.18 as well.
-
-Optional, but very recommended runtime dependencies:
-
-* python-keybinder (see below)
-* wnck python bindings
-* gvfs
-* `keyring` python module
-
 Opportunistic dependencies
 
-* The deprecated 'gnome' module is used for session connection as
-  fallback
 * If available, 'setproctitle' is used to set the process name
-* python-appindicator for ubuntu-style notification icon
+* If available, you can use AppIndicator3. On debian the package name
+  needed for the dependency is ``gir1.2-appindicator3-0.1`` (g-i bindings).
 
-* nautilus-python for nautilus selected file
-* python-gdata for Google plugins
+Recommended dependencies
+
+* Wnck-3.0 version 3.20 (Without this you can't focus already running
+  applications)
+* Yelp, the help browser
 
 Some plugins will require additional python modules!
 
@@ -105,21 +106,23 @@ kupfer requires an active dbus session bus.
 Keybinder Module
 ----------------
 
-Keybinder_ is a module for global keyboard shortcuts that originates
-from tomboy.
+Keybinder is a library for global keyboard shortcuts.
 
-.. _`Keybinder`: http://kaizer.se/wiki/keybinder
+You can use kupfer without the keybinder module, for example by assigning
+a window manager keybinding to the ``kupfer`` binary.
 
-You can use kupfer without the keybinder module, for example by
-assigning a global keybinding to the ``kupfer`` binary, but it not the
-recommended way.
+If ``Keybinder`` gi bindings are installed, the library is used. If you must
+disable it without uninstalling them then see the man page.
 
 Documentation
 =============
 
-Please read ``Documentation/`` and ``Documentation/Manpage.rst`` for
-technical documentation. User documentation is installed as GNOME
-(Mallard) help pages, available under the "Kupfer Help" object in the
-program itself.
+The user’s guide is installed as Mallard help pages, available under the
+“Kupfer Help” object in the program itself; it is also on the web page.
+Kupfer will use the help browser if there is a handler for the ``help:`` URI
+scheme. The user’s guide’s source is under ``help/``, and it is translatable.
 
-.. vim: ft=rst tw=72
+Please read ``Documentation/`` and ``Documentation/Manpage.rst`` for
+technical and contributor documentation.
+
+.. vim: ft=rst tw=78

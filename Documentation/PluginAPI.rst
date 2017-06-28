@@ -2,8 +2,6 @@
 Kupfer Plugin API
 =================
 
-:Homepage: http://kaizer.se/wiki/kupfer
-
 .. contents:: :depth: 2
 
 
@@ -48,7 +46,9 @@ It starts like this (an imagined example)::
     __version__ = "1"
     __author__ = "Tom Author"
 
-For a plugin, the following attributes are required::
+All these special variables must be defined before any other code in the
+module (even imports). For a plugin, the following attributes are
+required::
 
     __kupfer_name__ (Localized name of plugin)
     __description__ (Localized description of plugin)
@@ -111,7 +111,9 @@ objects that already exist in Kupfer. These actions appear in the
 right-hand actions pane in kupfer, when an object of the right type is
 selected.
 
-The complete python code for the plugin::
+The complete python code for the plugin:
+
+.. code:: python
 
     __kupfer_name__ = _("Image Viewer")
     __kupfer_actions__ = ("View", )
@@ -119,13 +121,14 @@ The complete python code for the plugin::
     __version__ = ""
     __author__ = "Tom Author"
 
-    import gtk
+
+    from gi.repository import Gtk
 
     from kupfer.objects import Action, FileLeaf
 
     class View (Action):
         def __init__(self):
-            Action.__init__(self, _("View"))
+            super().__init__(_("View"))
 
         def item_types(self):
             yield FileLeaf
@@ -134,15 +137,17 @@ The complete python code for the plugin::
             return fileobj.object.endswith(".jpg")
 
         def activate(self, fileobj):
-            image_widget = gtk.image_new_from_file(fileobj.object)
+            image_widget = Gtk.Image.new_from_file(fileobj.object)
             image_widget.show()
-            window = gtk.Window()
+            window = Gtk.Window()
             window.add(image_widget)
             window.present()
+
 
 That is all. What we did was the following:
 
 * Declare a plugin called "Image Viewer" with an action class ``View``.
+* Every string inside ``_("")`` is translatable
 * ``View`` declares that it works with ``FileLeaf``
 * ``View`` only accepts ``FileLeaf`` that end with '.jpg'
 * ``View`` defines a method ``activate`` that when called, will use gtk
@@ -178,7 +183,7 @@ or equivalently::
 KupferObject
 ::::::::::::
 
-KupferObject implements the things that are common to all objects:
+``class KupferObject`` implements the things that are common to all objects:
 *name*, *description*, *icon*, *thumbnail* and *name aliases*.
 
 
@@ -249,7 +254,7 @@ KupferObject Attributes
 Leaf
 ::::
 
-Leaf inherits from KupferObject.
+``class Leaf`` inherits from KupferObject.
 
 A Leaf represents an object that the user will want to act on. Examples
 are a file, an application or a free-text query (TextLeaf).
@@ -274,7 +279,7 @@ This defines, in addition to KupferObject:
 
 ``__hash__`` and ``__eq__``
     Leaves are hashable, can be members in a set, and duplicates are
-    recognized (and removed); this is essensial so that equivalent
+    recognized (and removed); this is essential so that equivalent
     Leaves from different sources are recognized. 
 
     These methods need normally not be overridden.
@@ -296,7 +301,7 @@ This defines, in addition to KupferObject:
 Action
 ::::::
 
-Action inherits from KupferObject.
+``class Action`` inherits from KupferObject.
 
 An Action represents a command using a direct object and an optional
 indirect object. One example is ``kupfer.obj.fileactions.Open`` that
@@ -341,7 +346,7 @@ Activate: Carrying Out the Action
 
     You should implement ``activate_multiple`` if it is possible to do
     something better than the equivalent of repeating ``activate``
-    *n* for *n* objects.
+    *n* times for *n* objects.
 
 ``activate`` and ``activate_multiple`` also receive a keyword argument
 called ``ctx`` if the action defines ``wants_context(self)`` to return
@@ -378,6 +383,11 @@ Determining Eligible Objects
     catalog, but from a defined source, return an instance of the Source
     here, else return None. ``for_item`` is the direct object.
 
+``object_source_and_catalog(self, for_item)``
+    If the action has an object source, by default only that source is
+    used for indirect objects. Return ``True`` here to use both the
+    custom source and the whole catalog.
+
 ``valid_object(self, iobj, for_item)``
     This method, if defined,  will be called for each indirect object
     (with the direct object as ``for_item``), to decide if it can be
@@ -402,7 +412,7 @@ The object passed as ``ctx`` has the following interface:
 
 ``ctx.register_late_result(result_object)``
     Register the ``result_object`` as a late result. It must be a
-    ``Leaf``.
+    ``Leaf`` or a ``Source``.
 
 ``ctx.register_late_error(exc_info=None)``
     Register an asynchronous error. (For synchronous errors, simply raise
@@ -426,7 +436,7 @@ The object passed as ``ctx`` has the following interface:
         Return the display name (i.e ``:0.0``)
 
     ``present_window(self, window)``
-        Present ``window`` (a ``gtk.Window``) on the current
+        Present ``window`` (a ``Gtk.Window``) on the current
         workspace and monitor using the current event time.
 
 
@@ -453,11 +463,18 @@ Some auxiliary methods tell Kupfer about how to handle the action:
     if you need to differentiate between different instances of the
     same Action class.
 
+Class Attributes
+................
+
+The attribute ``action_accelerator`` is ``None`` by default but
+can be a single letter string to suggest a default accelerator for
+this action. Actions that act like the default open should use ``"o"``.
+
 
 Source
 ::::::
 
-Source inherits from KupferObject.
+``class Source`` inherits from KupferObject.
 
 A Source understands specific data and delivers Leaves for it.
 
@@ -603,6 +620,10 @@ Source Attributes
     Set to ``True`` to not export its objects to the top level by
     default. Normally you don't wan't to change this
 
+``Source.source_use_cache =  True```
+    If ``True``, the source can be pickled to disk to save its
+    cached items until the next time the launcher is started.
+
 ``Source._version``
     Internal number that is ``1`` by default. Update this number in
     ``__init__`` to invalidate old versions of cache files.
@@ -687,7 +708,9 @@ This module provides important API for several plugin features.
 PluginSettings
 ..............
 
-To use user-settable configuration parameters, use::
+To use user-settable configuration parameters, use:
+
+.. code:: python
 
     __kupfer_settings__ = plugin_support.PluginSettings(
         {
@@ -861,7 +884,7 @@ can reuse.
         error.
 
         Specialized versions exist: Such as
-        ``CommandMissingError(cmd)``, ``NotAvailableError(toolname)``,
+        ``NotAvailableError(toolname)``,
         ``NoMultiError()``
 
 

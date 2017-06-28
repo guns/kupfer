@@ -1,7 +1,7 @@
 #!/bin/sh
 # kupfer      A convenient command and access tool
 #
-# Copyright 2007--2010 Ulrik Sverdrup <ulrik.sverdrup@gmail.com>
+# Copyright 2007--2017 Ulrik Sverdrup
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 # This script invokes kupfer by calling an already running instance, or
 # starting a new if none is found running.
@@ -25,23 +25,24 @@ _hasprefix () {
 
 PYTHON="@PYTHON@"
 PYTHONDIR="@PYTHONDIR@"
-_hasprefix "$PYTHON" "@"  && PYTHON=python
+_hasprefix "$PYTHON" "@"  && PYTHON=python3
 _hasprefix "$PYTHONDIR" "@" && PYTHONDIR=$(dirname $(readlink -f -- $0))/..
 
-SERVICE="se.kaizer.kupfer"
-OBJ="/interface"
-IFACE="se.kaizer.kupfer.Listener"
+SERVICE="io.github.kupferlauncher"
+OBJ="/io/github/kupferlauncher"
+IFACE="io.github.kupferlauncher.Listener"
+
+# If there are any options, like "--help", we run Kupfer directly
+_hasprefix "$1" "--"
+KUPFER_HAS_OPTIONS=$?
 
 # We allow reading directly from stdin if we pipe text into Kupfer
-if ! tty --quiet
+if [ ! -t 0 -a $# = 0 -a -z "$DESKTOP_STARTUP_ID" ]
 then
 	echo "kupfer: Reading from stdin" >&2
 	TEXT_INPUT=$(cat)
 fi
 
-# If there are any options, like "--help", we run Kupfer directly
-_hasprefix "$1" "--"
-KUPFER_HAS_OPTIONS=$?
 
 test $KUPFER_HAS_OPTIONS != 0 && dbus-send --type=method_call --print-reply \
 	--dest=$SERVICE $OBJ $IFACE.PresentOnDisplay string:"$DISPLAY" \
@@ -84,10 +85,5 @@ fi
 
 if test $KUPFER_RUNNING != 0
 then
-	exec ${PYTHON} "$PYTHONDIR/kupfer.py" $*
-fi
-
-if test -n "$DESKTOP_STARTUP_ID"
-then
-	${PYTHON} -c "import gtk.gdk; gtk.gdk.notify_startup_complete()"
+	exec ${PYTHON} "$PYTHONDIR/kupfer.py" "$@"
 fi

@@ -1,7 +1,431 @@
-.. role:: lp(strong)
-
 NEWS for kupfer
 ===============
+
+kupfer v319
+-----------
+
++ Fix *Get Parent Folder* to always return a ``FileLeaf`` (not a subclass)
+
++ Plugins:
+
+  + In *Rhythmbox*, always use song uris for enqueueing tracks (fixes an issue
+    with legacy encoded file paths).
+  + In *Rhythmbox*, improve error reporting on errors in *Get File*.
+  + Add *Prefer Dark Theme* that allows you to flip this GTK setting just
+    for Kupfer
+
+kupfer v318
+-----------
+
++ Refactor some of the UI so that it uses composition instead of inheritance
+  for Gtk widgets. No functional changes intended (except given below).
++ The result list for the third pane now sticks to the right side.
+
++ Plugins:
+
+  + In *Rhythmbox*, keep the cache even if the player is not running (#75).
+  + In *Rhythmbox*, fix a bug where songs would sometimes be skipped in the
+    *Songs* catalog.
+  + In *Media Player Control*, add item *Pause All*
+
+kupfer v317
+-----------
+
++ When an input method's preedit is active, backspace, return, arrows and
+  other keys are now reserved for the input method (ibus-mozc was tested).
++ All exceptions from content decorators from plugins are now caught and
+  logged (#73)
++ Fix remembering “Make (Action) Default for (Object)” when the object is
+  a text or a shell command.
++ Change so that ``kupfer`` only reads from stdin when called with no
+  arguments and when not started from a desktop file. This should fix issues
+  with starting from autostart or menus in some environments. (#72)
++ Fix a crash when the *Show Text* window is closed. (#71)
++ (API) Trying to install a plugin setting key with a reserved name now raises
+  an exception.
+
++ Plugins:
+
+  + In *Recent Documents*, fix an exception with filenames in unknown encoding
+  + In *Tracker*, fix an exception with malformed ``.savedSearch`` files.
+
+kupfer v316
+-----------
+
++ Bundle an icon used for windows and workspaces. Based on an icon in Adwaita.
++ Add two more default terminal alternatives, exo-open and x-terminal-emulator.
++ Add a few more alternatives in the drop down for large icon size
+
++ Plugins
+
+  + In *Rhythmbox*, look for more album art filenames in the same directory
+  + In *Firefox Keywords*, allow copying them to clipboard (Ctrl + C)
+  + In *Text Files*, fix *Write To* and *Append To*
+  + In *Tracker* support a location restriction for ``.savedSearch`` files.
+
+kupfer v315
+-----------
+
++ Fix an issue with launching X applications in wayland (#65)
++ Fix an exception on text input “file://”
+
++ Plugins
+
+  + In *Volumes*, show a notification on successful unmounts (#64)
+  + In *Documents* you can now opt out applications of having their recent
+    documents listed inside.
+  + In *Rhythmbox*, use less memory for storing the library cache
+  + In *Rhythmbox*, sort albums of an artist primarily by year, then title.
+  + In *Shell Commands*, fix the icon name of a command
+
+kupfer v314
+-----------
+
++ Replaced file action *Reveal* (file manager plugins do this better)
+  with *Get Parent Folder* which has the default accelerator *P* and thus is
+  very handy for navigation.
++ Fix so that right arrow can enter directories even in text mode
++ Allow **Action Accelerators** to use more than just A-Z keys
++ Misc fixes to start **wayland compatibility**. All uses of Wnck now
+  gracefully disable when not applicable.
++ Wnck is now technically optional, still recommended for best experience in X.
++ Tweak arrangement of items in the first page of the preferences window,
+  and add a few more icon size alternatives.
++ Tweak the multiple objects icon to look at bit better
++ Recognize pasted file:// uris as files
+
++ Plugins
+
+  + New plugin for file manager *Nemo*
+  + Fix *Rhythmbox* to not clear the queue when playing a single song
+  + Fix *Rhythmbox* to handle missing files gracefully
+  + Fix *Rhythmbox*, *Audacious* to not clear cached library/playlist when
+    the respective program exits
+
+kupfer v313
+-----------
+
++ **Action Accelerators**: every action can have a configurable accelerator
+  key that allows activating it directly.
++ Changed some default shortcuts:
+
+  + *Select ‘Selected Text’* now uses Ctrl + G
+  + *Switch to 1st Pane* now has no binding by default
+
++ Fix monitor placement in Unity (#45)
++ The preferences window now loads and shows current icon size
++ The configuration file is now written in sorted order.
++ Fix a minor visual issue using some themes (padding under match text)
++ The set keybinding window now has a button to clear the current binding
++ The result list now has a minimum size depending on the small icon size,
+  so it sizes better for hidpi
+
++ Plugins
+
+  + Handle errors better in *Tracker* and make *Get Tracker Results...*
+    fetch the results asynchronously.
+  + Fix *Dismiss* action in *Getting Things GNOME* plugin. Thanks
+    @khurshid-alam for the patch!
+  + Another *Create Task* action was added to GTG (an action on the app itself).
+  + *Audacious* now refreshes when the program starts
+  + *Attach in Email To* in *Thunderbird* is now not allowed on directories
+  + *Notes* now has *(Note) → Append → (Text)* which is a reversal of
+    an existing action
+  + *Append To Note* now works for kzrnote as well
+
+kupfer v312
+-----------
+
+*There are some lingering open bugs for desktop environments that are not my
+main desktop. Kupfer only becomes what everyone puts in, so if you can help
+fixing bugs related to your environment, please come to our github page.*
+
++ Add several new possible accelerator keys in the main kupfer interface:
+
+  + *Select Pane 1, 2, 3*
+  + *Select Clipboard Text*, *Select Clipboard File*
+  + Configure them in the keyboard tab in preferences
+
++ ``Keybinder`` which is optional is now also treated as such by configure
++ (API) Minor bugfix so that async Tasks don't need to set a name
++ Plugins:
+
+  + Handle errors better in the *Trash* plugin
+  + Fix the way *Rhythmbox* starts playback of multiple songs
+  + Add action *Get File* on *Rhythmbox* songs
+
+kupfer v311
+-----------
+
++ Work even if ``Keybinder`` is not installed. Also added environment var if
+  you need to disable it, even when it is installed.
++ (API) Actions can now post sources as “late results”. (*Get Notes Search
+  Results...* now uses this.)
++ (API) Add ``ShowHide``, ``ShowHideOnDisplay`` to D-Bus interface.
+
++ Plugins
+
+  + In *Notes*, retry opening notes for slow activation in Gnote/Tomboy
+  + Fix task sort order in *Getting Things GNOME*
+  + *Rhythmbox* and *Notes* refresh more often (when their programs restart)
+
+kupfer v310
+-----------
+
++ Speed up ranking objects a bit when the catalog is large
++ Show a nicer message when no action matches the search
++ Using AppIndicator is now an option (and optional dependency)
++ Plugins:
+
+  + Add *Firefox Keywords* to use configured keywords as search engines
+  + In *Applications* show more apps in *Open With...*
+  + In *Applications* add new action *Reset Associations*
+  + Reintroduce the *Rhythmbox* plugin, which allows searching the library,
+    playing and enqueuing songs. General Play/Pause/Prev/Next is in
+    the *Media Player Control* plugin already.
+  + Reintroduce the *Getting things GNOME* plugin.
+  + Reintroduce the *Devhelp* plugin.
+
++ (API) Allow Sources and TextSources to customize their no match and
+  waiting for search text.
++ (API) Allow Actions to use both the catalog and an extra source for the
+  indirect object
+
+kupfer v309
+-----------
+
++ Change Kupfer's D-Bus name and interface and object path. The old names
+  are still active, but the migration period will be very short because we
+  are in a rapid change phase. New names use the domain ``io.github.kupferlauncher``.
++ Change the no match icon to use transparency instead of ugly pixelation
++ Change the default text to simply be *Type to search*, which is shorter
+  and simpler.
++ Folding of *ß* has been restored, so that a search for *ss* will match it.
+
++ Plugins:
+
+  + In *Notes*, some actions are now asynchronous and/or have better error
+    reporting.
+  + In *Notes*, update for kzrnote 0.2
+  + Enable *Quicksilver Icons* by default
+
+kupfer v308.2
+-------------
+
++ Fix showing the result list in KWin (#47) with a specific workaround
++ Plugins:
+
+  + Fix *Shell Commands* so that they inherit the parent environment
+  + Remove *GNOME Session Management* from the set enabled by default
+
+kupfer v308.1
+-------------
+
++ Fix widget style/space issue that was especially apparent in the GTK theme
+  Adapta.
+
+kupfer v308
+-----------
+
+Be sure to check out the settings in the *Applications* plugin in this
+release. The web site now also shows a language selection for the user’s
+guide, so that the translations are readily available.
+
++ Fix a slight wobble in the result list’s position by making sure the
+  description label stays the same size
++ Fix how the star and arrow at the right side of the result list line up
++ Plugin API: Add methods ``get_gfile`` and ``is_content_type`` to ``FileLeaf``
++ Prerender and install fixed icon sizes
++ Plugins:
+
+  + In *Applications* change how it filters applications based on desktop
+    type. The new default desktop type is blank, and this should pick up
+    the right desktop environment automatically. Make the *Use Desktop
+    Filter* toggle actually work.
+  + Speed up recent documents slightly by caching an intermediate result
+  + In *Documents* also recognize more file extensions when sorting
+    libreoffice documents to the right app.
+  + Remove action *Send in Email To* from *Default Email Client*, since it
+    is unlikely to work for the default ``mailto:`` URL handler.
+  + Rename the remaining action *Compose Email* → *Compose Email To* in
+    default mail, for consistency.
+
+kupfer v307
+-----------
+
+Released Wednesday, 15 feb 2017
+
++ Fix a bug with disambiguation of action names
++ Stop merging contacts by full name equality
++ Accept dropped text and files on Kupfer’s window
++ Fix API to not ask for content-decoration of a leaf with existing content
++ Plugins
+
+  + Reintroduce *Pidgin*
+  + Reintroduce *Shorten Links*
+  + In *Thunderbird*, rename compose email actions to differentiate them,
+    *Compose Email To*, *Compose Email With*.
+  + In *Image Tools*, show an error if ``jpegtran`` is not found
+  + In *Audacious* add runnable item *Show Playing*
+  + Fix *Wikipedia* to use https
+  + In *Documents*, match more applications to their own recent documents,
+    notably LibreOffice
+  + Run copy from *File Actions* asynchronously
+  + Add a new help page, for plugin *Thunar*
+
+kupfer v306
+-----------
+
+Released Monday, 13 feb 2017
+
++ Fix a compatibility issue with waf wscripts for non UTF-8 locales
++ Fix plugin info loading from .zip files.
++ Fix exception on filenames that could not be represented in unicode. They
+  are silently skipped in directory listings for now.
++ Plugins:
+
+  + Fix *Deep Archives* to skip directories named with archive extensions
+  + Fix ``=help`` in *Calculator*
+  + Revert the hack that replaced ``,`` with ``.`` in numbers in
+    *Calculator*
+  + Add file action *Attach in Email To...* in *Thunderbird*
+  + Add text action *Compose Email* in *Thunderbird*
+  + Fix *Thunderbird* to read unicode correctly from the address book.
+  + Reintroduce places (GTK bookmarks) in *Documents*
+
+kupfer v305
+-----------
+
+Released Saturday, 11 feb 2017
+
++ Tweak how the selected pane is drawn. We still haven't arrived at a theme
+  and color-independent way to do this; Gtk 3 drawing and styling knowledge
+  is welcome in github.
++ Fix some drawing bugs in the main kupfer window by removing some old
+  erronous overrides of the widget size calculation.
++ Add attribute ``source_use_cache`` to the API for sources
++ Plugins:
+
+  + Add new plugin *Media Player Control* for basic control of any
+    mpris-capable player. This plugin is experimental.
+  + Fix bugs in *Volumes* so that it works well under Gtk 3
+  + Fix the Copy button in the *Show Text* result. The text is also now
+    editable.
+  + *Applications* now only proposes apps in *Open With...* that support
+    opening files. (Add ``%U`` or similar to your application’s command line
+    in the .desktop file, if it's missing.)
+  + Stop enabling *File Actions* by default (copy is not async with Gtk 3
+    so it is now defective). Please use the Thunar file actions instead.
+
+kupfer v304.1
+-------------
+
+Released Thursday, 9 feb 2017
+
++ Plugins:
+
+  + *Clipboard:* add back *Clipboard Text* that was removed in v304 by
+    mistake
+
+kupfer v304
+-----------
+
+Released Wednesday, 8 feb 2017
+
++ Clean up the distributable tarball; extra content like oldplugins is now
+  only in the repository and not in the tarball.
++ Fix double-clicking on the Kupfer window
++ Increase default result list length slightly
++ Plugins:
+
+  + Reintroduce *Firefox Bookmarks*
+  + *Clipboard:* attempted fix for a reported stack overflow
+  + *Clipboard:* reintroduce *Clipboard File(s)* proxy object
+  + Fix *File Actions* so that it works (for Gtk 3)
+
+kupfer v303
+-----------
+
+Released Tuesday, 7 feb 2017
+
+GNOME's hosting of the project is now officially at an end; mailing list and
+repo there are gone, we are on github now. Thank you GNOME and see you next
+time!
+
++ Completed port to pygi by removing ``pygtkcompat``
++ Build config will now look for ``python3`` if ``python`` is too old.
++ Plugins:
+
+  + Reintroduce *Locate*
+
+kupfer v302
+-----------
+
+Released Monday, 6 feb 2017
+
++ Fix sending files from the command line
++ Fix installation of help pages, new standard location ``/usr/share/help``
+  and including a file that was missing.
++ Fix --list-plugins and update man page.
++ Patch the included waf so that it now builds using Python 3
++ Plugin *Applications*: Add MATE as alternative
++ Fix interface to not draw preedit field at all
++ Fix *Copy to Clipboard* action.
+
+kupfer v301
+-----------
+
+Released Monday, 6 feb 2017
+
+A new decade of Kupfer
+
++ Fix loading plugin list for Python 3.6
++ New: ? starts free text input
++ New: ? text prefix gets live full text search results (plugin Tracker)
++ Plugins
+
+  + reintroduce tracker
+  + fix audacious
+  + fix dictionary
+  + drop multihead (updated, but needs testing)
+  + drop gnome-terminal (obsolete)
+
+kupfer v300
+-----------
+
+Released Sunday, 5 feb 2017
+
+A new decade of Kupfer dawns!
+
++ Port Kupfer to Python 3
++ Port Kupfer to Gtk 3 and GObject Introspection
++ Reindent the codebase to 4 spaces
+
++ Regard this release as a preview, it may have bugs
++ We have a github organization, new webpage, and will need maintainers to
+  hold the wheel into the next decade
+
++ Breaking changes:
+
+  + Plugin configs are reset
+  + Old ``kfcom`` can no longer be parsed
+  + Some changes in the Plugin API
+  + Many plugins are obsolete and have been dropped. Some old plugins can be
+    updated, but I in general Kupfer wants to explore new kinds of
+    interaction, and not necessarily collect all possible plugins in-tree
+  + Gtk theming has changed
+
++ New features:
+
+  + Use CSS for Gtk 3 themes
+  + Implemented using 2010s technology
+
++ Dependencies:
+
+  + This release requires ``Keybinder-3.0`` (using G-I), that will be
+    relaxed later
+
+.. role:: lp(strong)
 
 kupfer v208
 -----------

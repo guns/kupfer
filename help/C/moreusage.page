@@ -43,6 +43,14 @@
     </p>
   </section>
 
+  <section>
+    <title>Show Hidden Files</title>
+    <p>
+      Use <keyseq><key>Alt</key><key>→</key></keyseq> instead of just
+      <key>→</key> when descending into a directory to list hidden files too.
+    </p>
+  </section>
+
  <section>
    <title>The <em>Comma Trick</em></title>
     <p> The comma trick allows the user to use actions on many objects at
@@ -151,6 +159,15 @@
       <em>Save As...</em> action.  The resulting file will can be executed
       when opened from the file manager (it requires that Kupfer is already
       running).
+    </p>
+  </section>
+  <section>
+    <title>Ignoring Accents</title>
+    <p>
+      You can find an object by an unaccented version of its name (this is
+      more or less only implemented for latin-based alphabets).  For example
+      an item named <em>Suð í</em> can be matched with <em>sud i</em>
+      because the accent is removed and the ð transliterated to d.
     </p>
   </section>
 
