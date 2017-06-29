@@ -1255,13 +1255,11 @@ class Interface (GObject.GObject, pretty.OutputMixin):
             # translate extra commands to normal commands here
             # and remember skipped chars
             if keyv == key_book["space"]:
-                third_is_visible = self.third.get_property("visible")
                 self.current.hide_table()
-                self.current = self.third if third_is_visible else self.action
+                self.current = self.third
                 self._update_active()
-                if third_is_visible:
-                    self.toggle_text_mode(False)
-                    self.toggle_text_mode_quick()
+                self.toggle_text_mode(False)
+                self.toggle_text_mode_quick()
                 return True
             elif keyv == ord("/") and has_selection:
                 keyv = key_book["Right"]
