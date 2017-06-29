@@ -18,8 +18,6 @@ from kupfer.objects import Action, Source, Leaf
 from kupfer.objects import TextLeaf
 from kupfer import utils, config
 
-from kupfer.plugin import firefox_support
-
 
 def _noescape_urlencode(items):
     """Assemble an url param string from @items, without
@@ -33,9 +31,7 @@ def _urlencode(word):
 
 def _do_search_engine(terms, search_url, encoding="UTF-8"):
     """Show an url searching for @search_url with @terms"""
-    search_url = search_url.encode(encoding, "ignore")
-    terms_enc = terms.encode(encoding, "ignore")
-    query_url = search_url.replace("{searchTerms}", _urlencode(terms_enc))
+    query_url = search_url.replace("{searchTerms}", _urlencode(terms))
     utils.show_url(query_url)
 
 class SearchWithEngine (Action):
@@ -164,43 +160,6 @@ class OpenSearchSource (Source):
 
         # accept in kupfer data dirs
         plugin_dirs.extend(config.get_data_dirs("searchplugins"))
-
-        # firefox in home directory
-        ffx_home = firefox_support.get_firefox_home_file("searchplugins")
-        if ffx_home and os.path.isdir(ffx_home):
-            plugin_dirs.append(ffx_home)
-
-        plugin_dirs.extend(config.get_data_dirs("searchplugins",
-            package="firefox"))
-        plugin_dirs.extend(config.get_data_dirs("searchplugins",
-            package="iceweasel"))
-
-        addon_dir = "/usr/lib/firefox-addons/searchplugins"
-        cur_lang, _ignored = locale.getlocale(locale.LC_MESSAGES)
-        suffixes = ["en-US"]
-        if cur_lang:
-            suffixes = [cur_lang.replace("_", "-"), cur_lang[:2]] + suffixes
-        for suffix in suffixes:
-            addon_lang_dir = os.path.join(addon_dir, suffix)
-            if os.path.exists(addon_lang_dir):
-                plugin_dirs.append(addon_lang_dir)
-                break
-
-        # debian iceweasel
-        if os.path.isdir("/etc/iceweasel/searchplugins/common"):
-            plugin_dirs.append("/etc/iceweasel/searchplugins/common")
-        for suffix in suffixes:
-            addon_dir = os.path.join("/etc/iceweasel/searchplugins/locale",
-                    suffix)
-            if os.path.isdir(addon_dir):
-                plugin_dirs.append(addon_dir)
-
-        # try to find all versions of firefox
-        for dirname in os.listdir("/usr/lib/"):
-            if dirname.startswith("firefox") or dirname.startswith("iceweasel"):
-                addon_dir = os.path.join("/usr/lib", dirname, "searchplugins")
-                if os.path.isdir(addon_dir):
-                    plugin_dirs.append(addon_dir)
 
         self.output_debug("Found following searchplugins directories",
                 sep="\n", *plugin_dirs)
