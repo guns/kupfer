@@ -209,4 +209,6 @@ class ClipboardSource (Source):
 
     def clear(self):
         self.clipboards.clear()
+        for clip_type in [Gdk.SELECTION_PRIMARY, Gdk.SELECTION_SECONDARY, Gdk.SELECTION_CLIPBOARD]:
+            Gtk.Clipboard.get(clip_type).set_text("", -1)
         self.mark_for_update()
